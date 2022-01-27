@@ -40,34 +40,34 @@ KeyFileName = None
 
 TEMP_DIR = tempfile.gettempdir() # 获取临时文件路径
 PAYLOAD_DIR = 'Payload'
-PAYLOAD_PATH = os.path.join(TEMP_DIR, PAYLOAD_DIR)
-file_dict = {}
+PAYLOAD_PATH = os.path.join(TEMP_DIR, PAYLOAD_DIR) # 拼接存储临时文件的路径
+file_dict = {} 
 
-finished = threading.Event()
+finished = threading.Event() # 获取事件对象
 
 
 def get_usb_iphone():
     Type = 'usb'
-    if int(frida.__version__.split('.')[0]) < 12:
+    if int(frida.__version__.split('.')[0]) < 12: # 查看frida版本信息
         Type = 'tether'
-    device_manager = frida.get_device_manager()
-    changed = threading.Event()
+    device_manager = frida.get_device_manager() # 获取设备列表
+    changed = threading.Event() # 获取事件信息
 
-    def on_changed():
+    def on_changed(): # 唤醒线程
         changed.set()
 
-    device_manager.on('changed', on_changed) #
+    device_manager.on('changed', on_changed) # ？？？？
 
     device = None
     while device is None:
-        devices = [dev for dev in device_manager.enumerate_devices() if dev.type == Type]
-        if len(devices) == 0:
+        devices = [dev for dev in device_manager.enumerate_devices() if dev.type == Type] # 获取所有USB连接的设备
+        if len(devices) == 0:  # 没有设备，等待连接
             print('Waiting for USB device...')
-            changed.wait()
+            changed.wait() # 阻塞线程
         else:
-            device = devices[0]
+            device = devices[0] # 获得设备
 
-    device_manager.off('changed', on_changed)
+    device_manager.off('changed', on_changed) # ？？？？
 
     return device
 
@@ -196,20 +196,20 @@ def cmp_to_key(mycmp):
 
 def get_applications(device):
     try:
-        applications = device.enumerate_applications()
+        applications = device.enumerate_applications() #获取app列表 
     except Exception as e:
         sys.exit('Failed to enumerate applications: %s' % e)
 
     return applications
 
 
-def list_applications(device):
+def list_applications(device): # 列举手机上的app
     applications = get_applications(device)
 
     if len(applications) > 0:
-        pid_column_width = max(map(lambda app: len('{}'.format(app.pid)), applications))
-        name_column_width = max(map(lambda app: len(app.name), applications))
-        identifier_column_width = max(map(lambda app: len(app.identifier), applications))
+        pid_column_width = max(map(lambda app: len('{}'.format(app.pid)), applications)) # 获取pid最大长度
+        name_column_width = max(map(lambda app: len(app.name), applications)) # 获取name最大长度
+        identifier_column_width = max(map(lambda app: len(app.identifier), applications)) # 获取identifier最大长度
     else:
         pid_column_width = 0
         name_column_width = 0
@@ -290,6 +290,7 @@ def start_dump(session, ipa_name):
 
 
 if __name__ == '__main__':
+    # 设置参数信息
     parser = argparse.ArgumentParser(description='frida-ios-dump (by AloneMonkey v2.0)')
     parser.add_argument('-l', '--list', dest='list_applications', action='store_true', help='List the installed apps')
     parser.add_argument('-o', '--output', dest='output_ipa', help='Specify name of the decrypted IPA')

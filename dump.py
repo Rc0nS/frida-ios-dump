@@ -215,12 +215,15 @@ def list_applications(device): # 列举手机上的app
         name_column_width = 0
         identifier_column_width = 0
 
+    # 打印格式设置
     header_format = '%' + str(pid_column_width) + 's  ' + '%-' + str(name_column_width) + 's  ' + '%-' + str(
-        identifier_column_width) + 's'
+        identifier_column_width) + 's' # 
     print(header_format % ('PID', 'Name', 'Identifier'))
     print('%s  %s  %s' % (pid_column_width * '-', name_column_width * '-', identifier_column_width * '-'))
     line_format = '%' + str(pid_column_width) + 's  ' + '%-' + str(name_column_width) + 's  ' + '%-' + str(
         identifier_column_width) + 's'
+
+    # 打印应用列表
     for application in sorted(applications, key=cmp_to_key(compare_applications)):
         if application.pid == 0:
             print(line_format % ('-', application.name, application.identifier))

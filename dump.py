@@ -28,9 +28,9 @@ if IS_PY2:
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-script_dir = os.path.dirname(os.path.realpath(__file__))
+script_dir = os.path.dirname(os.path.realpath(__file__)) # 获取当前脚本所在的目录
 
-DUMP_JS = os.path.join(script_dir, 'dump.js')
+DUMP_JS = os.path.join(script_dir, 'dump.js') # 拼接dump.js的路径
 
 User = 'root'
 Password = 'alpine'
@@ -38,7 +38,7 @@ Host = 'localhost'
 Port = 2222
 KeyFileName = None
 
-TEMP_DIR = tempfile.gettempdir()
+TEMP_DIR = tempfile.gettempdir() # 获取临时文件路径
 PAYLOAD_DIR = 'Payload'
 PAYLOAD_PATH = os.path.join(TEMP_DIR, PAYLOAD_DIR)
 file_dict = {}
@@ -56,7 +56,7 @@ def get_usb_iphone():
     def on_changed():
         changed.set()
 
-    device_manager.on('changed', on_changed)
+    device_manager.on('changed', on_changed) #
 
     device = None
     while device is None:

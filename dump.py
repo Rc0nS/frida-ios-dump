@@ -333,6 +333,7 @@ if __name__ == '__main__':
             KeyFileName = args.ssh_key_filename
 
         try:
+            # ssh连接
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(Host, port=Port, username=User, password=Password, key_filename=KeyFileName)

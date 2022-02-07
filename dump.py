@@ -310,17 +310,17 @@ if __name__ == '__main__':
     ssh = None
 
     if not len(sys.argv[1:]):
-        parser.print_help()
-        sys.exit(exit_code)
+        parser.print_help() # 打印help信息
+        sys.exit(exit_code) 
 
-    device = get_usb_iphone()
+    device = get_usb_iphone() # 获得设备信息
 
     if args.list_applications:
-        list_applications(device)
+        list_applications(device) # 打印应用列表
     else:
-        name_or_bundleid = args.target
-        output_ipa = args.output_ipa
-        # update ssh args
+        name_or_bundleid = args.target # 目标进程
+        output_ipa = args.output_ipa # 砸壳后的应用名
+        # 如果对SSH进行了设置，则进行更新
         if args.ssh_host:
             Host = args.ssh_host
         if args.ssh_port:
@@ -357,7 +357,7 @@ if __name__ == '__main__':
             traceback.print_exc()
             exit_code = 1
 
-    if ssh:
+    if ssh: 
         ssh.close()
 
     if os.path.exists(PAYLOAD_PATH):

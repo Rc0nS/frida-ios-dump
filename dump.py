@@ -243,12 +243,12 @@ def load_js_file(session, filename):
 
 
 def create_dir(path):
-    path = path.strip()
-    path = path.rstrip('\\')
-    if os.path.exists(path):
-        shutil.rmtree(path)
+    path = path.strip() # 移除空格
+    path = path.rstrip('\\') # 移除右边的\\
+    if os.path.exists(path): 
+        shutil.rmtree(path) # 如果文件名存在，则递归删除
     try:
-        os.makedirs(path)
+        os.makedirs(path) # 创建目录
     except os.error as err:
         print(err)
 
@@ -260,6 +260,7 @@ def open_target_app(device, name_or_bundleid):
     session = None
     display_name = ''
     bundle_identifier = ''
+    # 获取目标进程的pid、name和identifier
     for application in get_applications(device):
         if name_or_bundleid == application.identifier or name_or_bundleid == application.name:
             pid = application.pid
@@ -268,15 +269,15 @@ def open_target_app(device, name_or_bundleid):
 
     try:
         if not pid:
-            pid = device.spawn([bundle_identifier])
-            session = device.attach(pid)
+            pid = device.spawn([bundle_identifier]) # 如果进程没有pid则创建pid
+            session = device.attach(pid) # 附加到进程上
             device.resume(pid)
         else:
             session = device.attach(pid)
     except Exception as e:
         print(e) 
 
-    return session, display_name, bundle_identifier
+    return session, display_name, bundle_identifier # 返回相关的信息
 
 
 def start_dump(session, ipa_name):
@@ -338,11 +339,17 @@ if __name__ == '__main__':
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(Host, port=Port, username=User, password=Password, key_filename=KeyFileName)
 
+            # 创建目录
             create_dir(PAYLOAD_PATH)
+
+
             (session, display_name, bundle_identifier) = open_target_app(device, name_or_bundleid)
+
+            # 设置保存的名字
             if output_ipa is None:
                 output_ipa = display_name
             output_ipa = re.sub('\.ipa$', '', output_ipa)
+            
             if session:
                 start_dump(session, output_ipa)
         except paramiko.ssh_exception.NoValidConnectionsError as e:

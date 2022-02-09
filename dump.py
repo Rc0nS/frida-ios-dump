@@ -283,12 +283,15 @@ def open_target_app(device, name_or_bundleid):
 def start_dump(session, ipa_name):
     print('Dumping {} to {}'.format(display_name, TEMP_DIR))
 
+    # 加载砸壳脚本
     script = load_js_file(session, DUMP_JS)
     script.post('dump')
     finished.wait()
 
+    # 封装为ipa文件
     generate_ipa(PAYLOAD_PATH, ipa_name)
 
+    # 解除附加
     if session:
         session.detach()
 
@@ -342,7 +345,7 @@ if __name__ == '__main__':
             # 创建目录
             create_dir(PAYLOAD_PATH)
 
-
+            # 附加到进程上
             (session, display_name, bundle_identifier) = open_target_app(device, name_or_bundleid)
 
             # 设置保存的名字
@@ -351,6 +354,7 @@ if __name__ == '__main__':
             output_ipa = re.sub('\.ipa$', '', output_ipa)
             
             if session:
+                # 开始砸壳
                 start_dump(session, output_ipa)
         except paramiko.ssh_exception.NoValidConnectionsError as e:
             print(e)
